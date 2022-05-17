@@ -1,6 +1,7 @@
 // Krystian Jachna - 7
 import java.util.Scanner;
 // todo komentarze
+// todo bubblesort zamiast insert
 public class Source {
     public static Scanner sc = new Scanner(System.in);
     public static int [] tab;                           // referencja do tablicy
@@ -52,7 +53,6 @@ public class Source {
                 r = pivIndex - 1;
             else
                 l = pivIndex + 1;
-
         }
     }
 
