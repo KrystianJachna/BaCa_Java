@@ -1,6 +1,6 @@
 // Krystian Jachna - 7
 import java.util.Scanner;
-
+// todo komentarze
 public class Source {
     public static Scanner sc = new Scanner(System.in);
     public static int [] tab;                           // referencja do tablicy
@@ -15,14 +15,12 @@ public class Source {
 
             while (questionNumber > 0) {
                 int k = sc.nextInt();
-                if (k <= tab.length)
-                    System.out.println(k + " " + select(0, tab.length - 1, k - 1));
+                if (k > 0 && k <= tab.length)
+                    System.out.println(k + " " + (tab[select(0, tab.length - 1, k - 1)]));
                 else
                     System.out.println(k + " brak");
                 --questionNumber;
             }
-
-
             --setsNumber;
         }
     }
@@ -46,7 +44,7 @@ public class Source {
         while (true) {
             if (l == r)
                 return l;
-            int pivIndex = getPivotIndex(l, r, k);
+            int pivIndex = getPivotIndex(l, r);
             pivIndex = partition(l, r, k, pivIndex);
             if (k == pivIndex)
                 return k;
@@ -58,11 +56,11 @@ public class Source {
         }
     }
 
-    public static int getPivotIndex(int l, int r, int k) {
-        if (r - l < 5)          // dla 5 lub mniej elementow mediana
+    public static int getPivotIndex(int l, int r) {
+        if (r - l + 1 <= 5)          // dla 5 lub mniej elementow mediana
             return sortAndMedian5(l, r);
 
-        for (int i = l; i < r; i+=5) {
+        for (int i = l; i <= r; i+=5) {
             int tmpR = i + 4;
 
             if (tmpR > r)
@@ -70,11 +68,11 @@ public class Source {
             int median5 = sortAndMedian5(i, tmpR);
 
             int tmp = tab[median5];
-            tab[median5] = tab[l + (i - l)/5];
-            tab[l + (i - l)/5] = tmp;
+            tab[median5] = tab[l + ((i - l)/5)];
+            tab[l + ((i - l)/5)] = tmp;
         }
         int mid = (r - l) / 10 + l + 1;
-        return select(l, l + (r - l)/5, k);
+        return select(l, l + ((r - l)/5), mid);
     }
 
     public static int sortAndMedian5(int l, int r) {
@@ -97,6 +95,7 @@ public class Source {
         int tmp = tab[pivIndex];
         tab[pivIndex] = tab[r];
         tab[r] = tmp;
+        int idexEqualElems;
 
         int i = l - 1;
         int j = r;
@@ -108,15 +107,16 @@ public class Source {
             if (i >= j)
                 break;
             else {
-                int temp = tab[i];
+                tmp = tab[i];
                 tab[i] = tab[j];
                 tab[j] = tmp;
             }
         }
-        int temp = tab[i];
-        tab[i] = tab[j];
-        tab[j] = tmp;
+        tmp = tab[i];
+        tab[i] = tab[r];
+        tab[r] = tmp;
         int indexSmallerElems = i;
+        idexEqualElems = i;
         ++i;
         for (j = i; j <= r; ++j) {
             if (tab[j] == pivValue) {
@@ -124,15 +124,78 @@ public class Source {
                  tab[j] = tab[i];
                  tab[i] = tmp;
                  ++i;
+                 ++idexEqualElems;
             }
         }
-        int indexEqualElems = i;
 
         if (k < indexSmallerElems)
             return indexSmallerElems;
-        if (k <= indexEqualElems)
+        if (k <= idexEqualElems)
             return k;
-        return indexEqualElems;
+        return idexEqualElems;
     }
 }
+/*
+3
+5
+1 2 3 4 5
+3
+1 2 3
+5
+5 3 4 4 3
+5
+2 5 1 3 4
+10
+1 1 1 1 1 1 1 1 1 1
+5
+1 10 0 20 11
 
++++
+
+1 1
+2 2
+3 3
+2 3
+5 5
+1 3
+3 4
+4 4
+1 1
+10 1
+0 brak
+20 brak
+11 brak
+
+---------------
+
+1
+20
+7 5 5 9 17 9 15 10 13 11 13 10 18 7 17 13 8 7 9 13
+4
+1 4 8 12
+
++++
+
+1 5
+4 7
+8 9
+12 11
+
+---------------
+
+1
+100
+0 57 48 38 28 39 5 69 4 89 58 23 83 72 78 59 88 19 100 55 43 35 16 29 43 49 3 51 0 25 39 23 18 86
+32 41 30 6 70 70 69 90 71 18 80 45 25 93 1 80 64 8 66 20 91 46 46 99 61 45 29 87 33 62 57 1 78 22
+26 4 88 52 36 48 67 12 9 69 49 40 58 71 10 30 48 91 70 47 77 66 67 22 75 84 63 15 48 14 16 83
+5
+3 10 40 74 98
+
++++
+
+3 1
+10 8
+40 39
+74 69
+98 93
+ */
