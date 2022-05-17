@@ -1,7 +1,7 @@
 // Krystian Jachna - 7
 import java.util.Scanner;
 // todo komentarze
-// todo bubblesort zamiast insert
+
 public class Source {
     public static Scanner sc = new Scanner(System.in);
     public static int [] tab;                           // referencja do tablicy
@@ -14,24 +14,29 @@ public class Source {
 
             int questionNumber = sc.nextInt();          // liczba zapytan
 
-            while (questionNumber > 0) {
-                int k = sc.nextInt();
-                if (k > 0 && k <= tab.length)
-                    System.out.println(k + " " + (tab[select(0, tab.length - 1, k - 1)]));
+            while (questionNumber > 0) {                // obliczanie k-tej wartosci w tablicy dla dowolnego zapytania
+                int k = sc.nextInt();                   // wczytanie wartosci k
+                if (k > 0 && k <= tab.length)           // jesli k miesci sie w tablicy...
+                    System.out.println(k + " " + (tab[select(0, tab.length - 1, k - 1)]));      // wypisz k i wartosc tablicy dla oblicznego indeksu
                 else
-                    System.out.println(k + " brak");
+                    System.out.println(k + " brak");                                                    // w innym przypadku wypisz odpowiednia informacje
                 --questionNumber;
             }
             --setsNumber;
         }
+        sc.close();
+        /*
+            Main wywolujacy odpowiednie metody i wypisujacy
+            odpowiednie informacje na ekran
+         */
     }
 
     public static void readTab() {
-        int tabSize = sc.nextInt();
+        int tabSize = sc.nextInt();                 // wczytaj dlugosc tablicy
         tab = new int [tabSize];
 
         for (int i = 0; i < tab.length; ++i)
-            tab[i] = sc.nextInt();
+            tab[i] = sc.nextInt();                  // wczytaj odpowiednie wartosci tablicy
 
         /*
             Funkcja odpowiedzialna za czytanie z wejscia rozmiaru tablicy
@@ -75,6 +80,7 @@ public class Source {
         return select(l, l + ((r - l)/5), mid);
     }
 
+    /*
     public static int sortAndMedian5(int l, int r) {
         for (int i = l + 1; i <= r; ++i) {
             int tmp = tab[i];
@@ -86,8 +92,28 @@ public class Source {
             tab[j+1] = tmp;
         }
         return (l + r) / 2;
-
     }
+    */
+
+    public static int sortAndMedian5(int l, int r) {
+        boolean swapped = false;
+
+        for (int i = l; i < r; ++i) {
+            for (int j = l + 1; j <= r; ++j) {
+                if (tab[i] > tab[j]) {
+                    int tmp = tab[i];
+                    tab[i] = tab[j];
+                    tab[j] = tmp;
+                    swapped = true;
+                }
+            }
+            if (!swapped)
+                break;
+            swapped = false;
+        }
+        return (l + r) / 2;
+    }
+
 
     public static int partition(int l, int r, int k, int pivIndex) {
         int pivValue = tab[pivIndex];
