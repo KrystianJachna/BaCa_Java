@@ -1,6 +1,5 @@
 // Krystian Jachna - 7
 
-
 import java.util.Scanner;
 
 class StackArray {
@@ -12,24 +11,31 @@ class StackArray {
         maxSize = Size;
         Elem = new int [maxSize];
 
-        for (int i = 0; i < maxSize; i++)
+        for (int i = 0; i < maxSize; i++)               // wczytanie tablicy wejsciowej
             Elem[i] = sc.nextInt();
 
         t = 0;                                          // ustawiwa szczyt na pierwszy elemnt tablicy tj. najmniejszy
     }
     public int top() {                                  // zwraca to co jest na szczycie stosu
-        if (isEmpty())
+        if (isEmpty())                                  // jesli jest pusty zwraca -1
             return -1;
         return Elem[t];
     }
     public boolean isEmpty() {                          // sprawdza pustosc stosu
         return (t == maxSize);
     }
-    public int pop() {                                  // zwraca szczyt stosu
+    public int pop() {                                  // zwraca szczyt stosu i usuwa element
         if (isEmpty())
             return -1;
         return Elem[t++];
     }
+
+    /*
+        Implementacja stosu na wlasne potrzeby, ktroy dziala tak, ze
+        poczatkowo jest wczytywana jest tablica wejsciowa i szczytem
+        stosu jest jej pierwszy element czyli najmniejszy. Nastepnie
+        operacje identyczne jak dla zwyklego stosu.
+     */
 }
 
 
@@ -57,13 +63,14 @@ public class Source {
                 Strings[i] = new StackArray(stringsLength[i], sc);      // Wczytanie stosu bedacego tablica do scalenia
 
 
-            int [] mergedArr = HeapSort(Strings, mergedArrLen);
+            int [] mergedArr = HeapSort(Strings, mergedArrLen);         // Wywolanie funkcji ktora scala nam tablice i zwraca referencje do niej
 
-            for (int i = 0; i < mergedArrLen; ++i )
+            for (int i = 0; i < mergedArrLen; ++i )                     // wypisanie danych wejsciowych
                 System.out.print(mergedArr[i] + " ");
 
             System.out.println("");
             --setsNumber;
+            mergedArrLen = 0;
         }
     }
 
@@ -81,6 +88,13 @@ public class Source {
             k = j;
         }
         Strings[k] = tmp;
+
+        /*
+            Podoobnie jak w insertionsort przechodzimy sciezka od wezla k
+            do liscia, wybieramy mniejszy z nastepnikow i nadpisujmey wez
+            ly do momentu gdy natchniemy sie na poprawna kolejnosc. lub
+            dojdziemy do ostatniego wezla bedacego rodzicem
+         */
     }
 
     public static int [] HeapSort(StackArray[] Strings, int mergedArrLen) {
@@ -105,5 +119,29 @@ public class Source {
             }
         }
         return sortedArr;
+
+        /*
+            Zasada bardzo podobna do zwyklego heapSorta z ta roznica
+            ze do naszej tablicy wyjsciowej/scalonej zapisujemy szcz
+            yt naszego kopca, w przypadku, kopiec skalda sie ze stos
+            ow wiec jezeli stos bedzie pusty dajemy go na ostatnie
+            miejsce i zmniejszamy wielkosc kopca, w innym przypadku
+            po prostu usuwamy dany element ze stosu i wykonujemy do
+            wn heap aby warunek kopca byl zachowany.
+         */
     }
 }
+
+// TEST.IN
+/*
+1
+3
+4 4 4
+1 3 5 7
+2 4 6 8
+0 9 10 11
+ */
+// TEST.OUT
+/*
+0 1 2 3 4 5 6 7 8 9 10 11
+ */
