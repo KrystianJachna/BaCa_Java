@@ -1,8 +1,5 @@
 // Krystian Jachna - 7
-/*
 
-
- */
 import java.util.Scanner;
 
 // kalsa plecak zawierajaca zawartosc plecaka i informacje i flage czy nalezy jeszcze szukac
@@ -61,6 +58,8 @@ class Stack {
         return top;
     }
 }
+
+
 // stos parametrow
 class Elem {
     int waga;
@@ -95,6 +94,9 @@ class StackBag {
         return top;
     }       // zwraca szczyt
  }
+
+
+
 // przechowuje wyjscie
 class Buffor {
 

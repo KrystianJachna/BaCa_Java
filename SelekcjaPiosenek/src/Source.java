@@ -1,4 +1,10 @@
 // Krystian Jachna - 7
+
+/*
+    Wywolanie rekurencyjne obliczajace mediane nie przekracza pesymistycznego przypadku liniowego, poniewaz
+    mediana median ma rozmiar n/5, podczas gdy inne wywolanie rekurenyjne nie przekracza 3/4  listy.
+    Ponadto wyodrebnienie podzadan i sortowanie 'piatek' to kosz liniowy.
+ */
 import java.util.Scanner;
 
 
@@ -67,49 +73,50 @@ public class Source {
     }
 
     public static int getPivotIndex(int l, int r) {
-        if (r - l + 1 <= 5)                             // dla 5 lub mniej elementow mediana
+        if (r - l + 1 <= 5)                             // dla 5 lub mniej elementow obliczana jest po prostu mediana
             return sortAndMedian5(l, r);
 
-        for (int i = l; i <= r; i+=5) {
-            int tmpR = i + 4;
+        for (int i = l; i <= r; i+=5) {                 // w innym przypadku przesuniecie median piecioelementowych podtablic na pierwsze n/5 pozycji
+            int tmpR = i + 4;                           // prawa granica pieciaelementowej i - podgrupy
 
-            if (tmpR > r)
+            if (tmpR > r)                               // jesli wyjdziemy poza tablice to korekta
                 tmpR = r;
-            int median5 = sortAndMedian5(i, tmpR);
 
-            int tmp = tab[median5];
+            int median5 = sortAndMedian5(i, tmpR);      // obliczanie mediany z 5
+            int tmp = tab[median5];                     // zamiana mediany z
             tab[median5] = tab[l + ((i - l)/5)];
             tab[l + ((i - l)/5)] = tmp;
         }
-        int mid = (r - l) / 10 + l + 1;
+        int mid = (r - l) / 10 + l + 1;                 // oblicza mediane
         return select(l, l + ((r - l)/5), mid);
         /*
             Funkcja tworzy podtablice po 5 elementow, a nastepnie liczy mediane
-            kazdej z tych podtablic.
+            kazdej z tych podtablic. I ustawia je na poczatku.
          */
     }
 
     public static int sortAndMedian5(int l, int r) {
         boolean swapped = false;
 
-        for (int i = l; i < r; ++i) {
-            for (int j = l + 1; j <= r; ++j) {
-                if (tab[i] > tab[j]) {
+        for (int i = l; i < r; ++i) {               // wziecie i tego elementu
+            for (int j = l + 1; j <= r; ++j) {      // wziecie i + 1 elemntu
+                if (tab[i] > tab[j]) {              // jesli w zlej kolejnosci to zamiana
                     int tmp = tab[i];
                     tab[i] = tab[j];
                     tab[j] = tmp;
                     swapped = true;
                 }
             }
-            if (!swapped)
+            if (!swapped)                           // jesli nie doszlo do zamiany koenic bo tablica jest posortowana
                 break;
             swapped = false;
         }
-        return (l + r) / 2;
+        return (l + r) / 2;                         // zwraca indeks mediany
         /*
             Bubble sort dla pieciu lub mniej elementow. Z dodatkowa
             flaga, aby sprawdzac czy zostala wykonana jakas zamiana
-            Funkcja zwraca indeks mediany podtablicy.
+            Funkcja zwraca indeks mediany podtablicy. Srodkowego e-
+            lementu.
          */
     }
 
@@ -129,7 +136,7 @@ public class Source {
             while(tab[++i] < pivValue);                  // szuka pierwszego z lewej wiekszego od pivota elementu
             while(j > l && tab[--j] >= pivValue);        // szuka pierwszego z prawej mniejszego elementu od pivota
 
-            if (i >= j)
+            if (i >= j)                                  // warunek konca petli
                 break;
             else {
                 tmp = tab[i];
