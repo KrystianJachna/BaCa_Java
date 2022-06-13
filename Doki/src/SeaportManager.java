@@ -1,37 +1,40 @@
+// Krystian Jachna
+
 import java.util.concurrent.Semaphore;
 
-
+/*
 interface SeaportManager {
+    void init(int numberOfDocks, int seawayCapacity);
+    void requestSeawayEntrance(Ship s);
+    int requestPortEntrance(Ship s);
+    void signalPortEntered(Ship s);
+    void requestPortExit(Ship s);
+    void signalPortExited(Ship s);
+    void signalShipSailedAway(Ship s);
+}
+*/
+
+interface Ship {
+    int getDockingSize();
+    Integer getAssignedDock();
+}
+
+public class SeaportManagerImpl /* implements SeaportManager */ {
 
     private Semaphore channelSem;
-    private Semaphore docksSem;
 
     private Semaphore usingArray;
-    private Ship [] shipArray;
+    private Ship docksArray[];
 
-
-    void init(int numberOfDocks, int seawayCapacity) {
-        channelSem = new Semaphore(seawayCapacity, true);
-        docksSem = new Semaphore(numberOfDocks, true);
-        docksSem = new boolean[numberOfDocks];
-        shipArray = new Ship[numberOfDocks];
-        usingArray = new Semaphore(1);
-    }
-
-    void requestSeawayEntrance(Ship s) throws InterruptedException {
-        while (!insertShip(s));
-        channelSem.acquire();
-    }
-
-    private boolean insertShip(Ship s) throws InterruptedException {
+    private boolean fillDocks(Ship s) throws InterruptedException {
         usingArray.acquire();
 
         int first = 0;
         int freePlaces = 0;
         boolean flag = false;
 
-        for (int i = 0; i < shipArray.length; ++i) {
-            if (shipArray[i] == null)
+        for (int i = 0; i < docksArray.length; ++i) {
+            if (docksArray[i] == null)
                 freePlaces++;
             else{
                 freePlaces = 0;
@@ -44,30 +47,55 @@ interface SeaportManager {
         }
         if (flag) {
             for (int i = first; i < freePlaces; ++i)
-                shipArray[i] = s;
+                docksArray[i] = s;
         }
         usingArray.release();
         return flag;
     }
 
-    int requestPortEntrance(Ship s);
+    public void init (int numberOfDocks, int seawayCapacity) {
+        usingArray = new Semaphore( 1 );
+        channelSem = new Semaphore( seawayCapacity, true );
+        docksArray = new Ship[numberOfDocks];
+    }
 
-    void signalPortEntered(Ship s);
+    public void requestSeawayEntrance (Ship s) throws InterruptedException {
+        while ( !fillDocks(s) );
+        channelSem.acquire();
+    }
 
-    void requestPortExit(Ship s);
+    public int requestPortEntrance (Ship s) throws InterruptedException {
+        usingArray.acquire();
 
-    void signalPortExited(Ship s);
+        int i = 0;
+        while (i < docksArray.length && docksArray[i] != s)  i++;
 
-    void signalShipSailedAway(Ship s);
-}
+        if (i == docksArray.length)  return -1;
 
-interface Ship {
+        usingArray.release();
+        return i;
+    }
 
-    int getDockingSize();
+    public void signalPortEntered(Ship s) throws InterruptedException{
+        channelSem.release();
+    }
 
-    Integer getAssignedDock();
-}
+    void requestPortExit(Ship s) throws InterruptedException {
+        channelSem.acquire();
+    }
 
-abstract class SeaportManagerImpl implements SeaportManager{
+    void signalPortExited(Ship s) throws InterruptedException {
+        usingArray.acquire();
+
+        int index = s.getAssignedDock();
+        for (int i = index; i < index + s.getDockingSize(); i++)
+            docksArray[i] = null;
+
+        usingArray.release();
+    }
+
+    void signalShipSailedAway(Ship s) throws InterruptedException {
+        channelSem.release();
+    }
 
 }
