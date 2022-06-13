@@ -19,7 +19,7 @@ class Params {
     // parametry
     public int i;
     public int spaceLeft;
-    public String curBag;
+    public StriBag;ng cur
     public Backpack backpack;
 
     public boolean flag;                    // zmienna do przechowywania informacji czy odpowiednia czesc kodu zostala juz wykonana w poprzednim wykonaniu

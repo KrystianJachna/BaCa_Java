@@ -299,8 +299,8 @@ public class Source {
                         ++i;
                     }
                     else if (rightPart) {                                           // jesli prawa czesc zostala posortowana to juz sie nia nie zajmujemy
-                        datasArr2D[tmp].Arr[0].anInt = -datasArr2D[tmp].Arr[0].anInt;
                         tmp = m - 1;
+                        datasArr2D[tmp].Arr[0].anInt = -datasArr2D[tmp].Arr[0].anInt;
                         ++i;
                     }
                     else {                                                          // w innym przypadku sygnalizujemy koniec podzielonej czesci zmieniajac wartosc na -
@@ -339,8 +339,8 @@ public class Source {
                         ++i;
                     }
                     else if (rightPart) { // prawa czesc
-                        datasArr2D[tmp].Arr[0].anInt = -datasArr2D[tmp].Arr[0].anInt;
                         tmp = m - 1;
+                        datasArr2D[tmp].Arr[0].anInt = -datasArr2D[tmp].Arr[0].anInt;
                         ++i;
                     }
                     else {
@@ -489,10 +489,10 @@ public class Source {
                         ++i;
                     }
                     else if (rightPart) {
+                        tmp = m - 1;
                         StringBuilder sb = new StringBuilder(datasArr2D[tmp].Arr[0].str);           // zmiana pierwszego chara na wartosc ujemna
                         sb.setCharAt(0, (char) (-(byte) datasArr2D[tmp].Arr[0].str.charAt(0)));
                         datasArr2D[tmp].Arr[0].str = sb.toString();
-                        tmp = m - 1;
                         ++i;
                     }
                     else {
@@ -535,10 +535,10 @@ public class Source {
                         ++i;
                     }
                     else if (rightPart) {
+                        tmp = m - 1;
                         StringBuilder sb = new StringBuilder(datasArr2D[tmp].Arr[0].str);           // zmiana pierwszego chara na wartosc ujemna
                         sb.setCharAt(0, (char) (-(byte) datasArr2D[tmp].Arr[0].str.charAt(0)));
                         datasArr2D[tmp].Arr[0].str = sb.toString();
-                        tmp = m - 1;
                         ++i;
                     }
                     else {
@@ -1146,10 +1146,4 @@ OCENA
 99
 99
 100
-
-
-
-
-
-
- */
+*/
